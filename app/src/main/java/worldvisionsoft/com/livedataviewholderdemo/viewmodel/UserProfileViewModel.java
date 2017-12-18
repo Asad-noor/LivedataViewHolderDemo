@@ -1,4 +1,4 @@
-package worldvisionsoft.com.livedataviewholderdemo.model.viewmodel;
+package worldvisionsoft.com.livedataviewholderdemo.viewmodel;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
