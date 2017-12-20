@@ -12,5 +12,6 @@ import worldvisionsoft.com.livedataviewholderdemo.repo.local.entity.UserTable;
 
 @Database(entities = {UserTable.class}, version = 1)
 public abstract class MyDatabase extends RoomDatabase {
+
     public abstract DataEntityDao userDao();
 }

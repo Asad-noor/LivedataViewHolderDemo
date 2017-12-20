@@ -1,12 +1,16 @@
 package worldvisionsoft.com.livedataviewholderdemo.repo;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Transformations;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -15,6 +19,7 @@ import worldvisionsoft.com.livedataviewholderdemo.repo.local.dao.DataEntityDao;
 import worldvisionsoft.com.livedataviewholderdemo.repo.local.entity.UserTable;
 import worldvisionsoft.com.livedataviewholderdemo.repo.remote.WebService;
 import worldvisionsoft.com.livedataviewholderdemo.repo.remote.model.ApiResponse;
+import worldvisionsoft.com.livedataviewholderdemo.repo.remote.model.UsersDTO;
 import worldvisionsoft.com.livedataviewholderdemo.util.App;
 import worldvisionsoft.com.livedataviewholderdemo.util.General;
 
@@ -27,22 +32,29 @@ public class DataRepository {
     WebService webservice;
     DataEntityDao dataEntityDao;
     Gson gson;
+    LiveData<UserTable> data = null;
 
+    @Inject
     public DataRepository(DataEntityDao dataEntityDao, WebService webservice){
         this.dataEntityDao = dataEntityDao;
         this.webservice = webservice;
         gson = new Gson();
     }
 
-    public LiveData<List<UserTable>> getUsers(){
-        if(General.isNetworkAvailable(App.getApp(), false)){
+    public LiveData<UserTable> testData(){
 
-            final LiveData<List<UserTable>> users = null;
-            webservice.loadMovies().enqueue(new Callback<ApiResponse>() {
+        if(General.isNetworkAvailable(App.getApp())){
+            webservice.testLogin("123456",
+                    "61","124243434",
+                    "dfbfdb", "dfbfdb",
+                    "dfbdfb", "bfdbf","dfbfb").enqueue(new Callback<ApiResponse>() {
                 @Override
                 public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
-                    String jsonStr = gson.toJson(response.body().getData());
-                    //List<UserTable> usersList = gson.fromJson(jsonStr, UserTable.class);
+                    Log.d("tttt", "res >"+response.body().getMessage());
+                    String jsonStr = gson.toJson(response.body());
+                    UsersDTO usersList = gson.fromJson(jsonStr, UsersDTO.class);
+                    //List<UserTable> users = usersList.getUsersList();
+                    data = usersList.getUsersList();
                 }
 
                 @Override
@@ -50,9 +62,9 @@ public class DataRepository {
 
                 }
             });
-            return users;
+            return data;
         }else{
-            return dataEntityDao.getAllUsers();
+            return data;
         }
     }
 }

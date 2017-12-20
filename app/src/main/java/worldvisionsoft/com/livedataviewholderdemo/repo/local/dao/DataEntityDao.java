@@ -20,9 +20,9 @@ public interface DataEntityDao {
     @Insert(onConflict = REPLACE)
     void save(UserTable user);
 
-    @Query("SELECT * FROM user WHERE id = :userId")
+    @Query("SELECT * FROM users WHERE id = :userId")
     LiveData<UserTable> load(String userId);
 
-    @Query("SELECT * FROM user")
+    @Query("SELECT * FROM users")
     LiveData<List<UserTable>> getAllUsers();
 }

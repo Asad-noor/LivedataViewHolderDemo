@@ -1,5 +1,6 @@
 package worldvisionsoft.com.livedataviewholderdemo.util;
 
+import android.app.Application;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -10,24 +11,16 @@ import android.net.NetworkInfo;
 
 public class General {
 
-    public static boolean isNetworkAvailable(Context context, boolean isNeedToNotify) {
-        if (context != null) {
-            ConnectivityManager connectivityManager = (ConnectivityManager) context.getApplicationContext().
+    public static boolean isNetworkAvailable(Application application) {
+        if (application != null) {
+            ConnectivityManager connectivityManager = (ConnectivityManager) application.
                     getSystemService(Context.CONNECTIVITY_SERVICE);
             if (connectivityManager == null) {
-                //if (isNeedToNotify)
-                    //
                 return false;
             } else {
                 NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-                if (activeNetwork != null) { //connected to the internet.
-                    return true;
-                }
+                return activeNetwork != null;
             }
-            //if (isNeedToNotify)
-                //
-
-            return false;
         } else
             return false;
     }
