@@ -20,6 +20,6 @@ public class MainActivity extends AppCompatActivity {
     private void addHomeFragment() {
         Fragment homeFragment = new HomeFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(homeFragment, "home").commitAllowingStateLoss();
+        fragmentTransaction.add(R.id.fragment_container, homeFragment, "home").commitAllowingStateLoss();
     }
 }

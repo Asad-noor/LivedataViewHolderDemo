@@ -7,6 +7,7 @@ import android.util.Log;
 import javax.inject.Inject;
 
 import worldvisionsoft.com.livedataviewholderdemo.repo.DataRepository;
+import worldvisionsoft.com.livedataviewholderdemo.repo.Resource;
 import worldvisionsoft.com.livedataviewholderdemo.repo.local.entity.UserTable;
 import worldvisionsoft.com.livedataviewholderdemo.util.App;
 
@@ -18,7 +19,7 @@ public class UserProfileViewModel extends ViewModel{
 
     @Inject
     DataRepository dataRepository;
-    LiveData<UserTable> data;
+    LiveData<Resource<UserTable>> data;
 
     public UserProfileViewModel(){
         App.getApp().getNetComponent().inject(this);
@@ -26,10 +27,10 @@ public class UserProfileViewModel extends ViewModel{
         //dataRepository.testData();
     }
 
-    public LiveData<UserTable> getUser(boolean isNeedToLoad) {
+    public LiveData<Resource<UserTable>> getUser(boolean isNeedToLoad) {
         //if we need each time the screen loads and onCreate called.
         if(isNeedToLoad) {
-            data = dataRepository.testData();
+            data = dataRepository.loadUser("gg");
             return data;
         }
         else

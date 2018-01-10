@@ -29,42 +29,70 @@ import worldvisionsoft.com.livedataviewholderdemo.util.General;
 
 public class DataRepository {
 
-    WebService webservice;
-    DataEntityDao dataEntityDao;
-    Gson gson;
-    LiveData<UserTable> data = null;
+    private final WebService webservice;
+    private final DataEntityDao dataEntityDao;
+    //Gson gson;
+    //LiveData<UserTable> data = null;
 
     @Inject
     public DataRepository(DataEntityDao dataEntityDao, WebService webservice){
         this.dataEntityDao = dataEntityDao;
         this.webservice = webservice;
-        gson = new Gson();
     }
 
-    public LiveData<UserTable> testData(){
+    public LiveData<Resource<UserTable>> loadUser(final String userId) {
+        return new NetworkBoundResource<UserTable,UserTable>() {
+            @Override
+            protected void saveCallResult(@NonNull Object item) {
+                //dataEntityDao.save(item.getData());
+                Log.d("tttt", "got some date to save on DB");
+            }
 
-        if(General.isNetworkAvailable(App.getApp())){
-            webservice.testLogin("123456",
+            @Override
+            protected boolean shouldFetch(@Nullable UserTable data) {
+                //return rateLimiter.canFetch(userId) && (data == null || !isFresh(data));
+                return true;
+            }
+
+            @NonNull @Override
+            protected LiveData<UserTable> loadFromDb() {
+                return dataEntityDao.load(userId);
+            }
+
+            @NonNull @Override
+            protected Call<ApiResponse> createCall() {
+                return webservice.testLogin("123456",
                     "61","124243434",
                     "dfbfdb", "dfbfdb",
-                    "dfbdfb", "bfdbf","dfbfb").enqueue(new Callback<ApiResponse>() {
-                @Override
-                public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
-                    Log.d("tttt", "res >"+response.body().getMessage());
-                    String jsonStr = gson.toJson(response.body());
-                    UsersDTO usersList = gson.fromJson(jsonStr, UsersDTO.class);
-                    //List<UserTable> users = usersList.getUsersList();
-                    data = usersList.getUsersList();
-                }
-
-                @Override
-                public void onFailure(Call<ApiResponse> call, Throwable t) {
-
-                }
-            });
-            return data;
-        }else{
-            return data;
-        }
+                    "dfbdfb", "bfdbf","dfbfb");
+            }
+        }.getAsLiveData();
     }
+
+//    public LiveData<UserTable> testData(){
+//
+//        if(General.isNetworkAvailable(App.getApp())){
+//            webservice.testLogin("123456",
+//                    "61","124243434",
+//                    "dfbfdb", "dfbfdb",
+//                    "dfbdfb", "bfdbf","dfbfb").enqueue(new Callback<ApiResponse>() {
+//                @Override
+//                public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+//                    Log.d("tttt", "res >"+response.body().getMessage());
+//                    String jsonStr = gson.toJson(response.body());
+//                    UsersDTO usersList = gson.fromJson(jsonStr, UsersDTO.class);
+//                    //List<UserTable> users = usersList.getUsersList();
+//                    data = usersList.getUsersList();
+//                }
+//
+//                @Override
+//                public void onFailure(Call<ApiResponse> call, Throwable t) {
+//
+//                }
+//            });
+//            return data;
+//        }else{
+//            return data;
+//        }
+//    }
 }
