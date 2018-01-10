@@ -1,15 +1,11 @@
 package worldvisionsoft.com.livedataviewholderdemo.ui.activity;
 
-import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
-import android.net.Uri;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-
 import worldvisionsoft.com.livedataviewholderdemo.R;
-import worldvisionsoft.com.livedataviewholderdemo.viewmodel.UserProfileViewModel;
+import worldvisionsoft.com.livedataviewholderdemo.ui.fragment.HomeFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,17 +14,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        UserProfileViewModel userProfileViewModel = ViewModelProviders.of(this).get(UserProfileViewModel.class);
-
-        if(savedInstanceState == null)
-            userProfileViewModel.getUser(true);
-        else
-            userProfileViewModel.getUser(false);
+        addHomeFragment();
     }
 
-    public void openApp(View view) {
-        Intent intent = new Intent (Intent.ACTION_VIEW);
-        intent.setData (Uri.parse("usuaccess://splash"));
-        startActivity(intent);
+    private void addHomeFragment() {
+        Fragment homeFragment = new HomeFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.fragment_container, homeFragment, "home").commitAllowingStateLoss();
     }
 }

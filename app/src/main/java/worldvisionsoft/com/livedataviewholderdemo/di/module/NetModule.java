@@ -15,7 +15,6 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import worldvisionsoft.com.livedataviewholderdemo.BuildConfig;
@@ -24,10 +23,7 @@ import worldvisionsoft.com.livedataviewholderdemo.repo.local.MyDatabase;
 import worldvisionsoft.com.livedataviewholderdemo.repo.local.dao.DataEntityDao;
 import worldvisionsoft.com.livedataviewholderdemo.repo.remote.WebService;
 import worldvisionsoft.com.livedataviewholderdemo.util.Constants;
-import worldvisionsoft.com.livedataviewholderdemo.viewmodel.UserProfileViewModel;
 
-import static okhttp3.logging.HttpLoggingInterceptor.Level.HEADERS;
-import static okhttp3.logging.HttpLoggingInterceptor.Level.NONE;
 
 /**
  * Created by user on 12/17/2017.
@@ -44,25 +40,25 @@ public class NetModule {
         return gsonBuilder.create();
     }
 
-    @Provides
-    @Singleton
-    HttpLoggingInterceptor provideHttpLoggingInterceptor() {
-        HttpLoggingInterceptor httpLoggingInterceptor =
-                new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
-                    @Override
-                    public void log(String message) {
-                        Log.d("tttt", "message HttpLoggingInterceptor >" + message);
-                    }
-                });
-        httpLoggingInterceptor.setLevel(BuildConfig.DEBUG ? HEADERS : NONE);
-        return httpLoggingInterceptor;
-    }
+//    @Provides
+//    @Singleton
+//    HttpLoggingInterceptor provideHttpLoggingInterceptor() {
+//        HttpLoggingInterceptor httpLoggingInterceptor =
+//                new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
+//                    @Override
+//                    public void log(String message) {
+//                        Log.d("tttt", "message HttpLoggingInterceptor >" + message);
+//                    }
+//                });
+//        httpLoggingInterceptor.setLevel(BuildConfig.DEBUG ? HEADERS : NONE);
+//        return httpLoggingInterceptor;
+//    }
 
     @Provides
     @Singleton
     OkHttpClient provideOkhttpClient() {
         return new OkHttpClient.Builder()
-                .addInterceptor(provideHttpLoggingInterceptor())
+                //.addInterceptor(provideHttpLoggingInterceptor())
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .build();
     }
