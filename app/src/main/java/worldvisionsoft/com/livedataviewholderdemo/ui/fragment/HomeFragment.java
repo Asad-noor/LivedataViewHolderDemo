@@ -1,8 +1,9 @@
 package worldvisionsoft.com.livedataviewholderdemo.ui.fragment;
 
 import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.LifecycleRegistry;
+import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.OnLifecycleEvent;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -34,12 +35,12 @@ public class HomeFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        getLifecycle().addObserver(new HomeLifecycleObserver());
+
         UserProfileViewModel userProfileViewModel = ViewModelProviders.of(this).get(UserProfileViewModel.class);
 
         observer = userTableResource -> {
-            if(super.getCurrentState().equals(Lifecycle.State.CREATED)){
-                Log.d("tttt", "current state is created");
-            }
+            Log.d("tttt", "current state is created");
         };
 
         if (savedInstanceState == null)
@@ -48,5 +49,31 @@ public class HomeFragment extends BaseFragment {
             userProfileViewModel.getUser(false);
     }
 
+    private class HomeLifecycleObserver implements LifecycleObserver {
 
+        @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+        void onCreate() {
+            Log.d("tttt", "ON_CREATE");
+        }
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_START)
+        void onStart() {
+            Log.d("tttt", "ON_START");
+        }
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+        void onStop() {
+            Log.d("tttt", "ON_STOP");
+        }
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+        void onPause() {
+            Log.d("tttt", "ON_PAUSE");
+        }
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+        void onResume() {
+            Log.d("tttt", "ON_RESUME");
+        }
+    }
 }

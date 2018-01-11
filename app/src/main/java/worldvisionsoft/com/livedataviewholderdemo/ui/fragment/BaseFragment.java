@@ -13,10 +13,6 @@ public abstract class BaseFragment extends Fragment implements LifecycleRegistry
 
     private LifecycleRegistry lifecycleRegistry = new LifecycleRegistry(this);
 
-    protected Lifecycle.State getCurrentState(){
-        return lifecycleRegistry.getCurrentState();
-    }
-
     @Override
     public LifecycleRegistry getLifecycle() {
         return lifecycleRegistry;
