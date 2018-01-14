@@ -18,26 +18,28 @@ import worldvisionsoft.com.livedataviewholderdemo.repo.remote.model.ApiResponse;
  * Created by user on 1/10/2018.
  */
 
-public abstract class NetworkBoundResource<ResultType, RequestType> {
+public abstract class NetworkBoundResource<ResultType> {
     private final MediatorLiveData<Resource<ResultType>> result = new MediatorLiveData<>();
 
     @MainThread
     NetworkBoundResource() {
         result.setValue(Resource.loading(null));
         LiveData<ResultType> dbSource = loadFromDb();
+
         result.addSource(dbSource, data -> {
             result.removeSource(dbSource);
+
             if (shouldFetch(data)) {
                 fetchFromNetwork(dbSource);
             } else {
-                result.addSource(dbSource,
-                        newData -> result.setValue(Resource.success(newData)));
+                result.addSource(dbSource, newData -> result.setValue(Resource.success(newData)));
             }
         });
     }
 
     private void fetchFromNetwork(final LiveData<ResultType> dbSource) {
         result.addSource(dbSource, newData -> result.setValue(Resource.loading(newData)));
+
         createCall().enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
@@ -96,8 +98,7 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
     // Called when the fetch fails. The child class may want to reset components
     // like rate limiter.
     @MainThread
-    protected void onFetchFailed() {
-    }
+    protected abstract void onFetchFailed();
 
     // returns a LiveData that represents the resource, implemented
     // in the base class.
