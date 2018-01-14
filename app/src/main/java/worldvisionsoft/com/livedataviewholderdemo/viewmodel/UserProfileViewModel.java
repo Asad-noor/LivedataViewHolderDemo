@@ -30,10 +30,13 @@ public class UserProfileViewModel extends ViewModel{
     public LiveData<Resource<UserTable>> getUser(boolean isNeedToLoad) {
         //if we need each time the screen loads and onCreate called.
         if(isNeedToLoad) {
+            Log.d("tttt", "isNeedToLoad true");
             data = dataRepository.loadUser("gg");
             return data;
         }
-        else
+        else {
+            Log.d("tttt", "isNeedToLoad false");
             return data;
+        }
     }
 }

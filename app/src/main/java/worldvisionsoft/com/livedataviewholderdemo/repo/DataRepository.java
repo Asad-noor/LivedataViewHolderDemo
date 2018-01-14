@@ -41,7 +41,7 @@ public class DataRepository {
     }
 
     public LiveData<Resource<UserTable>> loadUser(final String userId) {
-        return new NetworkBoundResource<UserTable,UserTable>() {
+        return new NetworkBoundResource<UserTable>() {
             @Override
             protected void saveCallResult(@NonNull Object item) {
                 //dataEntityDao.save(item.getData());
@@ -66,33 +66,12 @@ public class DataRepository {
                     "dfbfdb", "dfbfdb",
                     "dfbdfb", "bfdbf","dfbfb");
             }
+
+            @Override
+            protected void onFetchFailed() {
+                Log.d("tttt", "data fetch failed");
+            }
+
         }.getAsLiveData();
     }
-
-//    public LiveData<UserTable> testData(){
-//
-//        if(General.isNetworkAvailable(App.getApp())){
-//            webservice.testLogin("123456",
-//                    "61","124243434",
-//                    "dfbfdb", "dfbfdb",
-//                    "dfbdfb", "bfdbf","dfbfb").enqueue(new Callback<ApiResponse>() {
-//                @Override
-//                public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
-//                    Log.d("tttt", "res >"+response.body().getMessage());
-//                    String jsonStr = gson.toJson(response.body());
-//                    UsersDTO usersList = gson.fromJson(jsonStr, UsersDTO.class);
-//                    //List<UserTable> users = usersList.getUsersList();
-//                    data = usersList.getUsersList();
-//                }
-//
-//                @Override
-//                public void onFailure(Call<ApiResponse> call, Throwable t) {
-//
-//                }
-//            });
-//            return data;
-//        }else{
-//            return data;
-//        }
-//    }
 }

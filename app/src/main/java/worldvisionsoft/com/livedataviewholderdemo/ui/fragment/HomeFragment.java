@@ -40,7 +40,9 @@ public class HomeFragment extends BaseFragment {
         UserProfileViewModel userProfileViewModel = ViewModelProviders.of(this).get(UserProfileViewModel.class);
 
         observer = userTableResource -> {
-            Log.d("tttt", "current state is created");
+            Log.d("tttt", "status >"+userTableResource.status);
+            Log.d("tttt", "data >"+userTableResource.data);
+            Log.d("tttt", "message >"+userTableResource.message);
         };
 
         if (savedInstanceState == null)
@@ -49,7 +51,7 @@ public class HomeFragment extends BaseFragment {
             userProfileViewModel.getUser(false);
     }
 
-    private class HomeLifecycleObserver implements LifecycleObserver {
+    class HomeLifecycleObserver implements LifecycleObserver {
 
         @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
         void onCreate() {
