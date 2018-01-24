@@ -55,6 +55,10 @@ dependencies {
     compile rootProject.ext.daggerAndroidSupport
     annotationProcessor rootProject.ext.daggerAndroidProcessor
 
+    //RxJava
+    compile rootProject.ext.rxjava
+    compile rootProject.ext.rxAndroid
+
     //ui
     compile rootProject.ext.picasso
 }

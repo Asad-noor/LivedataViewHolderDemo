@@ -1,27 +1,15 @@
 package worldvisionsoft.com.livedataviewholderdemo.repo;
 
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Transformations;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
-
-import com.google.gson.Gson;
-
-import java.util.List;
-
 import javax.inject.Inject;
 
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import worldvisionsoft.com.livedataviewholderdemo.repo.local.dao.DataEntityDao;
-import worldvisionsoft.com.livedataviewholderdemo.repo.local.entity.UserTable;
+import worldvisionsoft.com.livedataviewholderdemo.repo.local.entity.Posts;
 import worldvisionsoft.com.livedataviewholderdemo.repo.remote.WebService;
-import worldvisionsoft.com.livedataviewholderdemo.repo.remote.model.ApiResponse;
-import worldvisionsoft.com.livedataviewholderdemo.repo.remote.model.UsersDTO;
-import worldvisionsoft.com.livedataviewholderdemo.util.App;
-import worldvisionsoft.com.livedataviewholderdemo.util.General;
 
 /**
  * Created by user on 12/17/2017.
@@ -32,7 +20,6 @@ public class DataRepository {
     private final WebService webservice;
     private final DataEntityDao dataEntityDao;
     //Gson gson;
-    //LiveData<UserTable> data = null;
 
     @Inject
     public DataRepository(DataEntityDao dataEntityDao, WebService webservice){
@@ -40,31 +27,29 @@ public class DataRepository {
         this.webservice = webservice;
     }
 
-    public LiveData<Resource<UserTable>> loadUser(final String userId) {
-        return new NetworkBoundResource<UserTable>() {
+    public LiveData<Resource<Posts>> loadUser() {
+        return new NetworkBoundResource<Posts>() {
             @Override
-            protected void saveCallResult(@NonNull Object item) {
-                //dataEntityDao.save(item.getData());
+            protected void saveCallResult(@NonNull Posts item) {
+                dataEntityDao.savePosts(item);
                 Log.d("tttt", "got some date to save on DB");
             }
 
             @Override
-            protected boolean shouldFetch(@Nullable UserTable data) {
+            protected boolean shouldFetch(@Nullable Posts data) {
                 //return rateLimiter.canFetch(userId) && (data == null || !isFresh(data));
-                return true;
+                Log.d("tttt", "data shouldFetch >"+data);
+                return data == null;
             }
 
             @NonNull @Override
-            protected LiveData<UserTable> loadFromDb() {
-                return dataEntityDao.load(userId);
+            protected LiveData<Posts> loadFromDb() {
+                return dataEntityDao.getAllPosts();
             }
 
             @NonNull @Override
-            protected Call<ApiResponse> createCall() {
-                return webservice.testLogin("123456",
-                    "61","124243434",
-                    "dfbfdb", "dfbfdb",
-                    "dfbdfb", "bfdbf","dfbfb");
+            protected Call<Posts> createCall() {
+                return webservice.testLogin("title1", "body1", 11);
             }
 
             @Override

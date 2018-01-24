@@ -1,11 +1,11 @@
 package worldvisionsoft.com.livedataviewholderdemo.repo.remote;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.GET;
 import retrofit2.http.POST;
-import worldvisionsoft.com.livedataviewholderdemo.repo.remote.model.ApiResponse;
+import worldvisionsoft.com.livedataviewholderdemo.repo.local.entity.Posts;
 
 /**
  * Created by user on 12/17/2017.
@@ -13,14 +13,9 @@ import worldvisionsoft.com.livedataviewholderdemo.repo.remote.model.ApiResponse;
 
 public interface WebService {
 
-    @POST("/member/login")
+    @POST("/posts")
     @FormUrlEncoded
-    Call<ApiResponse> testLogin(@Field("AccessNo") String AccessNo,
-                                @Field("PhoneCountryCode") String PhoneCountryCode,
-                                @Field("Phone") String PhoneNo,
-                                @Field("UDID") String UDID,
-                                @Field("Registrar") String Registrar,
-                                @Field("DeviceToken") String DeviceToken,
-                                @Field("DeviceModel") String DeviceModel,
-                                @Field("DevicePlatform") String DevicePlatform);
+    Call<Posts> testLogin(@Field("title") String title,
+                          @Field("body") String body,
+                          @Field("userId") int userId);
 }

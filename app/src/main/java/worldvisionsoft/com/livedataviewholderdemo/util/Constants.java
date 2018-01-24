@@ -5,5 +5,5 @@ package worldvisionsoft.com.livedataviewholderdemo.util;
  */
 
 public class Constants {
-    public static final String BASE_URL = "http://192.168.1.10";
+    public static final String BASE_URL = "https://jsonplaceholder.typicode.com";
 }

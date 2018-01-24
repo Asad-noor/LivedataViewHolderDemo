@@ -7,6 +7,7 @@ import android.arch.persistence.room.Query;
 
 import java.util.List;
 
+import worldvisionsoft.com.livedataviewholderdemo.repo.local.entity.Posts;
 import worldvisionsoft.com.livedataviewholderdemo.repo.local.entity.UserTable;
 
 import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
@@ -18,11 +19,11 @@ import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 @Dao
 public interface DataEntityDao {
     @Insert(onConflict = REPLACE)
-    void save(UserTable user);
+    void savePosts(Posts posts);
 
-    @Query("SELECT * FROM users WHERE id = :userId")
-    LiveData<UserTable> load(String userId);
+    @Query("SELECT * FROM Posts WHERE id = :id")
+    LiveData<Posts> load(String id);
 
-    @Query("SELECT * FROM users")
-    LiveData<List<UserTable>> getAllUsers();
+    @Query("SELECT * FROM Posts")
+    LiveData<Posts> getAllPosts();
 }

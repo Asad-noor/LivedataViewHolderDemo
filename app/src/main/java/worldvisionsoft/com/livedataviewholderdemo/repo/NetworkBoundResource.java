@@ -8,11 +8,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import android.util.Log;
-
+import org.reactivestreams.Subscriber;
+import io.reactivex.Flowable;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subscribers.DisposableSubscriber;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import worldvisionsoft.com.livedataviewholderdemo.repo.remote.model.ApiResponse;
+import worldvisionsoft.com.livedataviewholderdemo.repo.local.entity.Posts;
+
 
 /**
  * Created by user on 1/10/2018.
@@ -38,18 +42,20 @@ public abstract class NetworkBoundResource<ResultType> {
     }
 
     private void fetchFromNetwork(final LiveData<ResultType> dbSource) {
+        Log.d("tttt", "fetchFromNetwork called");
         result.addSource(dbSource, newData -> result.setValue(Resource.loading(newData)));
 
-        createCall().enqueue(new Callback<ApiResponse>() {
+        createCall().enqueue(new Callback<Posts>() {
             @Override
-            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+            public void onResponse(Call<Posts> call, Response<Posts> response) {
                 result.removeSource(dbSource);
-                Log.d("tttt", "got respo >"+response.body().getStatusCode());
+                Log.d("tttt", "got respo >"+response.body().getBody());
                 saveResultAndReInit(response.body());
             }
 
             @Override
-            public void onFailure(Call<ApiResponse> call, Throwable t) {
+            public void onFailure(Call<Posts> call, Throwable t) {
+                Log.d("tttt", "data load failed >"+t.getMessage());
                 onFetchFailed();
                 result.removeSource(dbSource);
                 result.addSource(dbSource, newData -> result.setValue(Resource.error(t.getMessage(), newData)));
@@ -58,29 +64,38 @@ public abstract class NetworkBoundResource<ResultType> {
     }
 
     @MainThread
-    private void saveResultAndReInit(ApiResponse response) {
-        new AsyncTask<Void, Void, Void>() {
+    private void saveResultAndReInit(Posts response) {
+        Flowable<Posts> objectFlowable = Flowable.just(response);
 
+        Subscriber<Posts> subscriber = new DisposableSubscriber<Posts>() {
             @Override
-            protected Void doInBackground(Void... voids) {
-                saveCallResult(response.getData());
-                return null;
+            public void onNext(Posts s) {
+                Log.d("tttt", " onNext >"+s.getTitle());
+                saveCallResult(s);
             }
 
             @Override
-            protected void onPostExecute(Void aVoid) {
-                // we specially request a new live data,
-                // otherwise we will get immediately last cached value,
-                // which may not be updated with latest results received from network.
+            public void onError(Throwable t) {
+                Log.d("tttt", " onError");
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d("tttt", " onComplete");
                 result.addSource(loadFromDb(),
                         newData -> result.setValue(Resource.success(newData)));
             }
-        }.execute();
+        };
+
+        objectFlowable
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.newThread())
+                .subscribe(subscriber);
     }
 
     // Called to save the result of the API response into the database
     @WorkerThread
-    protected abstract void saveCallResult(@NonNull Object item);
+    protected abstract void saveCallResult(@NonNull Posts item);
 
     // Called with the data in the database to decide whether it should be
     // fetched from the network.
@@ -93,7 +108,7 @@ public abstract class NetworkBoundResource<ResultType> {
 
     // Called to create the API call.
     @NonNull @MainThread
-    protected abstract Call<ApiResponse> createCall();
+    protected abstract Call<Posts> createCall();
 
     // Called when the fetch fails. The child class may want to reset components
     // like rate limiter.

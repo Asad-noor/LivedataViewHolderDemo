@@ -34,6 +34,8 @@ ext {
     okhttpVersion = '3.8.0'
     picassoVersion = '2.5.2'
     archVersion = '1.0.0-alpha1'
+    rxjavaVersion = '2.0.7'
+    rxAndroidVersion = '2.0.1'
 
     supportLibAppCompat = "com.android.support:appcompat-v7:$supportLibVersion"
     supportLibDesign = "com.android.support:design:$supportLibVersion"
@@ -51,4 +53,6 @@ ext {
     gsonConverter = "com.squareup.retrofit2:converter-gson:$gsonConverterVersion"
     okhttp = "com.squareup.okhttp3:okhttp:$okhttpVersion"
     picasso = "com.squareup.picasso:picasso:$picassoVersion"
+    rxjava = "io.reactivex.rxjava2:rxjava:$rxjavaVersion"
+    rxAndroid = "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
 }

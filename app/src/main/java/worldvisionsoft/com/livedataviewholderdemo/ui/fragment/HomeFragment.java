@@ -12,8 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 import worldvisionsoft.com.livedataviewholderdemo.R;
 import worldvisionsoft.com.livedataviewholderdemo.repo.Resource;
+import worldvisionsoft.com.livedataviewholderdemo.repo.local.entity.Posts;
 import worldvisionsoft.com.livedataviewholderdemo.repo.local.entity.UserTable;
 import worldvisionsoft.com.livedataviewholderdemo.viewmodel.UserProfileViewModel;
 
@@ -23,7 +26,7 @@ import worldvisionsoft.com.livedataviewholderdemo.viewmodel.UserProfileViewModel
 
 public class HomeFragment extends BaseFragment {
 
-    private Observer<Resource<UserTable>> observer;
+    private Observer<Resource<Posts>> observer;
 
     @Nullable
     @Override
