@@ -2,7 +2,6 @@ package worldvisionsoft.com.livedataviewholderdemo.repo;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
-import android.os.AsyncTask;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,6 +9,7 @@ import android.support.annotation.WorkerThread;
 import android.util.Log;
 import org.reactivestreams.Subscriber;
 import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.DisposableSubscriber;
 import retrofit2.Call;
@@ -63,15 +63,14 @@ public abstract class NetworkBoundResource<ResultType> {
         });
     }
 
-    @MainThread
+    @WorkerThread
     private void saveResultAndReInit(Posts response) {
-        Flowable<Posts> objectFlowable = Flowable.just(response);
+        Flowable<Void> objectFlowable = saveCallResult(response);
 
-        Subscriber<Posts> subscriber = new DisposableSubscriber<Posts>() {
+        Subscriber<Void> subscriber = new DisposableSubscriber<Void>() {
             @Override
-            public void onNext(Posts s) {
-                Log.d("tttt", " onNext >"+s.getTitle());
-                saveCallResult(s);
+            public void onNext(Void s) {
+                Log.d("tttt", " onNext >");
             }
 
             @Override
@@ -89,13 +88,13 @@ public abstract class NetworkBoundResource<ResultType> {
 
         objectFlowable
                 .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);
     }
 
     // Called to save the result of the API response into the database
     @WorkerThread
-    protected abstract void saveCallResult(@NonNull Posts item);
+    protected abstract Flowable<Void> saveCallResult(@NonNull Posts item);
 
     // Called with the data in the database to decide whether it should be
     // fetched from the network.

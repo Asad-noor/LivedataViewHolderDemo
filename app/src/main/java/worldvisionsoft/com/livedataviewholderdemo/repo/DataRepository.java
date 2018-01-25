@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import javax.inject.Inject;
 
+import io.reactivex.Flowable;
 import retrofit2.Call;
 import worldvisionsoft.com.livedataviewholderdemo.repo.local.dao.DataEntityDao;
 import worldvisionsoft.com.livedataviewholderdemo.repo.local.entity.Posts;
@@ -30,9 +31,10 @@ public class DataRepository {
     public LiveData<Resource<Posts>> loadUser() {
         return new NetworkBoundResource<Posts>() {
             @Override
-            protected void saveCallResult(@NonNull Posts item) {
-                dataEntityDao.savePosts(item);
+            protected Flowable<Void> saveCallResult(@NonNull Posts item) {
                 Log.d("tttt", "got some date to save on DB");
+                dataEntityDao.savePosts(item);
+                return null;
             }
 
             @Override
