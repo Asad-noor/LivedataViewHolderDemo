@@ -8,8 +8,14 @@ import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import android.util.Log;
 import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
+
 import io.reactivex.Flowable;
+import io.reactivex.FlowableSubscriber;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.DisposableSubscriber;
 import retrofit2.Call;
@@ -67,20 +73,24 @@ public abstract class NetworkBoundResource<ResultType> {
     private void saveResultAndReInit(Posts response) {
         Flowable<Void> objectFlowable = saveCallResult(response);
 
-        Subscriber<Void> subscriber = new DisposableSubscriber<Void>() {
+        FlowableSubscriber<Void> flowableSubscriber = new FlowableSubscriber<Void>() {
             @Override
-            public void onNext(Void s) {
-                Log.d("tttt", " onNext >");
+            public void onSubscribe(Subscription s) {
+
+            }
+
+            @Override
+            public void onNext(Void aVoid) {
+
             }
 
             @Override
             public void onError(Throwable t) {
-                Log.d("tttt", " onError");
+
             }
 
             @Override
             public void onComplete() {
-                Log.d("tttt", " onComplete");
                 result.addSource(loadFromDb(),
                         newData -> result.setValue(Resource.success(newData)));
             }
@@ -89,7 +99,7 @@ public abstract class NetworkBoundResource<ResultType> {
         objectFlowable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(subscriber);
+                .subscribe(flowableSubscriber);
     }
 
     // Called to save the result of the API response into the database
