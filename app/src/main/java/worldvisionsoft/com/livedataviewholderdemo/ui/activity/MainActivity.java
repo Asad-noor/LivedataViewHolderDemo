@@ -51,23 +51,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        try {
-            Log.d("tttt", ">>" + Encrypt("test text 123", "0123456789abcdef"));
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (InvalidAlgorithmParameterException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
         //addHomeFragment();
         //getUniqueID();
         //makeEncrypt();
@@ -112,14 +95,6 @@ public class MainActivity extends AppCompatActivity {
                 Settings.Secure.ANDROID_ID);
 
         Log.d("tttt", "ANDROID_ID >" + android_id);
-
-//        TelephonyManager tm = (TelephonyManager) getBaseContext()
-//                .getSystemService(MainActivity.TELEPHONY_SERVICE);
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-//
-//            String tmDevice = "" + tm.getDeviceId();
-//            Log.d("tttt","DeviceIMEI >" + tmDevice);
-//        }
     }
 
     private void makeEncrypt() {
