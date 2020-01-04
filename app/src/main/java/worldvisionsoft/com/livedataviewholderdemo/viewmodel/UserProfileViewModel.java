@@ -18,13 +18,13 @@ import worldvisionsoft.com.livedataviewholderdemo.util.App;
  * Created by user on 12/17/2017.
  */
 
-public class UserProfileViewModel extends ViewModel{
+public class UserProfileViewModel extends ViewModel {
 
     @Inject
     DataRepository dataRepository;
     LiveData<Resource<Posts>> data;
 
-    public UserProfileViewModel(){
+    public UserProfileViewModel() {
         App.getApp().getNetComponent().inject(this);
         //if we need only once when the app starts after killing it.
         //dataRepository.testData();
@@ -32,13 +32,10 @@ public class UserProfileViewModel extends ViewModel{
 
     public LiveData<Resource<Posts>> getUser(boolean isNeedToLoad) {
         //if we need each time the screen loads and onCreate called.
-        if(isNeedToLoad) {
-            Log.d("tttt", "isNeedToLoad true");
+        if (isNeedToLoad) {
             data = dataRepository.loadUser();
             return data;
-        }
-        else {
-            Log.d("tttt", "isNeedToLoad false");
+        } else {
             return data;
         }
     }
